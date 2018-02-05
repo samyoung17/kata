@@ -78,3 +78,13 @@ def three_for_two(items):
     ordered_items = sorted(split_items(items), key=lambda i: i.unit_price)
     one_third_of_items = int(len(ordered_items) / 3.0)
     return -base_price_items(ordered_items[:one_third_of_items])
+
+
+def three_for_six_quid(items):
+    # An ill defined discount.
+    # Why not give the customer close to max value, by bucketing the most expensive ales!
+    ordered_items = sorted(split_items(items), key=lambda i: -i.unit_price)
+    n_3 = int(len(ordered_items) / 3.0)
+    prices = map(lambda item: item.unit_price, ordered_items)
+    buckets = [prices[j*3:j*3 + 3] for j in range(n_3)]
+    return -sum(map(lambda bucket: max(sum(bucket) - 6.0, 0.0), buckets))

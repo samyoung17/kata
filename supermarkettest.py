@@ -54,7 +54,7 @@ class TestHalfPrice(unittest.TestCase):
         items = [Item('ball', 1.0, 1, categories=['toys'])]
         discounts = [Discount('50% off', 'toys', half_price)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -0.5)
+        self.assertAlmostEquals(discount, -0.5)
 
     def test_half_price_toys_formatting(self):
         items = [Item('ball', 1.0, 1, categories=['toys'])]
@@ -75,19 +75,19 @@ class TestTwoForOne(unittest.TestCase):
         items = [Item('lamy', 12.0, 2, categories=['pens'])]
         discounts = [Discount('2 for 1', 'pens', two_for_one)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -12.0)
+        self.assertAlmostEquals(discount, -12.0)
 
     def test_cheapest_pen_is_free(self):
         items = [Item('lamy', 12.0, 1, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
         discounts = [Discount('2 for 1', 'pens', two_for_one)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -11.0)
+        self.assertAlmostEquals(discount, -11.0)
 
     def test_odd_number_of_items(self):
         items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
         discounts = [Discount('2 for 1', 'pens', two_for_one)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -11.0)
+        self.assertAlmostEquals(discount, -11.0)
 
     def test_formatting(self):
         items = [Item('lamy', 12.0, 2, categories=['pens'])]
@@ -99,7 +99,7 @@ class TestTwoForOne(unittest.TestCase):
         items = [Item('lamy', 12.0, 2, categories=['pens']), Item('ball', 1.0, 2, categories=['toys'])]
         discounts = [Discount('3 for 2', 'pens', two_for_one)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -12.0)
+        self.assertAlmostEquals(discount, -12.0)
 
 
 class TestThreeForTwo(unittest.TestCase):
@@ -108,25 +108,25 @@ class TestThreeForTwo(unittest.TestCase):
         items = [Item('lamy', 12.0, 3, categories=['pens'])]
         discounts = [Discount('3 for 2', 'pens', three_for_two)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -12.0)
+        self.assertAlmostEquals(discount, -12.0)
 
     def test_cheapest_pen_is_free(self):
         items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
         discounts = [Discount('3 for 2', 'pens', three_for_two)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -11.0)
+        self.assertAlmostEquals(discount, -11.0)
 
     def test_four_items(self):
         items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 2, categories=['pens'])]
         discounts = [Discount('3 for 2', 'pens', three_for_two)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -11.0)
+        self.assertAlmostEquals(discount, -11.0)
 
     def test_six_items(self):
         items = [Item('lamy', 12.0, 3, categories=['pens']), Item('parker', 11.0, 3, categories=['pens'])]
         discounts = [Discount('3 for 2', 'pens', three_for_two)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -22.0)
+        self.assertAlmostEquals(discount, -22.0)
 
     def test_formatting(self):
         items = [Item('lamy', 12.0, 3, categories=['pens'])]
@@ -138,7 +138,46 @@ class TestThreeForTwo(unittest.TestCase):
         items = [Item('lamy', 12.0, 3, categories=['pens']), Item('ball', 1.0, 3, categories=['toys'])]
         discounts = [Discount('3 for 2', 'pens', three_for_two)]
         discount = total_discount(discounts, items)
-        self.assertEquals(discount, -12.0)
+        self.assertAlmostEquals(discount, -12.0)
+
+
+class TestThreeForSixQuid(unittest.TestCase):
+
+    def test_three_for_six_quid_ales(self):
+        items = [Item('bath', 2.5, 3, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        discount = total_discount(discounts, items)
+        self.assertAlmostEquals(discount, -1.5)
+
+    def test_different_ales(self):
+        items = [Item('bath', 2.5, 2, categories=['ales']), Item('speckled', 2.8, 1, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        discount = total_discount(discounts, items)
+        self.assertAlmostEquals(discount, -1.8)
+
+    def test_four_items(self):
+        items = [Item('bath', 2.5, 2, categories=['ales']), Item('speckled', 2.8, 2, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        discount = total_discount(discounts, items)
+        self.assertAlmostEquals(discount, -2.1)
+
+    def test_six_items(self):
+        items = [Item('bath', 2.5, 3, categories=['ales']), Item('speckled', 2.8, 3, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        discount = total_discount(discounts, items)
+        self.assertAlmostEquals(discount, -3.9)
+
+    def test_cheap_ales(self):
+        items = [Item('john_smith', 1.5, 3, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        discount = total_discount(discounts, items)
+        self.assertAlmostEquals(discount, 0)
+
+    def test_formatting(self):
+        items = [Item('bath', 2.5, 3, categories=['ales'])]
+        discounts = [Discount('3 for £6', 'ales', three_for_six_quid)]
+        receipt = itemised_discounts(discounts, items)
+        self.assertEquals(receipt, '3 for £6 ales:\t\t\t£-1.50\n')
 
 if __name__ == '__main__':
     unittest.main()

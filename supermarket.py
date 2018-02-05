@@ -25,3 +25,7 @@ def format_item(item):
 
 def itemised_receipt(items):
     return '\n'.join(map(format_item, items)) + '\n'
+
+
+def format_subtotal(items):
+    return 'Subtotal:\t\t\t£{:3.2f}'.format(price_items(items))

@@ -40,5 +40,13 @@ class TestItemisedReceipt(unittest.TestCase):
         self.assertEquals(receipt, '1\tball:\t\t\t£1.00\n2\tpen:\t\t\t£24.00\n\tonions:\t0.800kg @ £0.75/kg\t£0.60\n')
 
 
+class TestSubtotal(unittest.TestCase):
+
+    def test_itemise_one_item(self):
+        items = [Item('ball', 1.0, 1), Item('pen', 12.0, 2), Item('onions', 0.75, 0.8, unit='kg')]
+        subtotal = format_subtotal(items)
+        self.assertEquals(subtotal, 'Subtotal:\t\t\t£25.60')
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -19,8 +19,17 @@ class Discount:
         self.rule = rule
 
 
-def price_items(items):
+def base_price_items(items):
     return sum(map(lambda item: item.unit_price * item.quantity, items))
+
+
+def calculate_discount(discount, items):
+    eligible_items = filter(lambda item: discount.category in item.categories, items)
+    return discount.rule(eligible_items)
+
+
+def total_discount(discounts, items):
+    return sum(map(lambda discount: calculate_discount(discount, items), discounts))
 
 
 def format_item(item):
@@ -36,7 +45,7 @@ def itemised_receipt(items):
 
 
 def format_subtotal(items):
-    return 'Subtotal:\t\t\t£{:3.2f}'.format(price_items(items))
+    return 'Subtotal:\t\t\t£{:3.2f}'.format(base_price_items(items))
 
 
 def format_discount(discount, items):

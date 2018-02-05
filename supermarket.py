@@ -45,15 +45,19 @@ def itemised_receipt(items):
 
 
 def format_subtotal(items):
-    return 'Subtotal:\t\t\t£{:3.2f}'.format(base_price_items(items))
+    return 'Subtotal:\t\t\t£{:3.2f}\n'.format(base_price_items(items))
 
 
 def format_discount(discount, items):
-    return '{} {}:\t\t\t£{:3.2f}\n'.format(discount.name, discount.category, discount.rule(items))
+    return '{} {}:\t\t\t£{:3.2f}\n'.format(discount.name, discount.category, calculate_discount(discount, items))
 
 
 def itemised_discounts(discounts, items):
     return ''.join(map(lambda discount: format_discount(discount, items), discounts))
+
+
+def format_total(items, discounts):
+    return 'Total:\t\t\t£{:3.2f}\n'.format(base_price_items(items) + total_discount(discounts, items))
 
 
 def half_price(items):
@@ -88,3 +92,23 @@ def three_for_six_quid(items):
     prices = map(lambda item: item.unit_price, ordered_items)
     buckets = [prices[j*3:j*3 + 3] for j in range(n_3)]
     return -sum(map(lambda bucket: max(sum(bucket) - 6.0, 0.0), buckets))
+
+
+def main(items, discounts):
+    return itemised_receipt(items) + format_subtotal(items)\
+           + itemised_discounts(discounts, items) + format_total(items, discounts)
+
+
+if __name__ == '__main__':
+    example_items = [
+        Item('bath', 2.5, 3, categories=['ales']),
+        Item('speckled', 2.8, 3, categories=['ales']),
+        Item('lamy', 12.0, 3, categories=['pens']),
+        Item('parker', 11.0, 3, categories=['pens']),
+        Item('onions', 0.75, 0.8, unit='kg')
+    ]
+    example_discounts = [
+        Discount('2 for 1', 'pens', two_for_one),
+        Discount('3 for £6', 'ales', three_for_six_quid)
+    ]
+    print(main(example_items, example_discounts))

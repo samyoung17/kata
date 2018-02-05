@@ -1,0 +1,9 @@
+3	bath:			£7.50
+3	speckled:			£8.40
+3	lamy:			£36.00
+3	parker:			£33.00
+	onions:	0.800kg @ £0.75/kg	£0.60
+Subtotal:			£85.50
+2 for 1 pens:			£-33.00
+3 for £6 ales:			£-3.90
+Total:			£48.60

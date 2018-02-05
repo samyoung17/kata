@@ -72,3 +72,9 @@ def two_for_one(items):
     ordered_items = sorted(split_items(items), key=lambda i: i.unit_price)
     half_number_of_items = int(len(ordered_items)/2.0)
     return -base_price_items(ordered_items[:half_number_of_items])
+
+
+def three_for_two(items):
+    ordered_items = sorted(split_items(items), key=lambda i: i.unit_price)
+    one_third_of_items = int(len(ordered_items) / 3.0)
+    return -base_price_items(ordered_items[:one_third_of_items])

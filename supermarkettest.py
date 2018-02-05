@@ -95,6 +95,50 @@ class TestTwoForOne(unittest.TestCase):
         receipt = itemised_discounts(discounts, items)
         self.assertEquals(receipt, '2 for 1 pens:\t\t\t£-12.00\n')
 
+    def test_pens_offer_doesnt_apply_to_toys(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens']), Item('ball', 1.0, 2, categories=['toys'])]
+        discounts = [Discount('3 for 2', 'pens', two_for_one)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -12.0)
+
+
+class TestThreeForTwo(unittest.TestCase):
+
+    def test_three_for_two_pens(self):
+        items = [Item('lamy', 12.0, 3, categories=['pens'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -12.0)
+
+    def test_cheapest_pen_is_free(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -11.0)
+
+    def test_four_items(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 2, categories=['pens'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -11.0)
+
+    def test_six_items(self):
+        items = [Item('lamy', 12.0, 3, categories=['pens']), Item('parker', 11.0, 3, categories=['pens'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -22.0)
+
+    def test_formatting(self):
+        items = [Item('lamy', 12.0, 3, categories=['pens'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        receipt = itemised_discounts(discounts, items)
+        self.assertEquals(receipt, '3 for 2 pens:\t\t\t£-12.00\n')
+
+    def test_pens_offer_doesnt_apply_to_toys(self):
+        items = [Item('lamy', 12.0, 3, categories=['pens']), Item('ball', 1.0, 3, categories=['toys'])]
+        discounts = [Discount('3 for 2', 'pens', three_for_two)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -12.0)
 
 if __name__ == '__main__':
     unittest.main()

@@ -48,10 +48,6 @@ class TestSubtotal(unittest.TestCase):
         self.assertEquals(subtotal, 'Subtotal:\t\t\t£25.60')
 
 
-def half_price(items):
-    return -0.5 * sum(map(lambda item: item.unit_price * item.quantity, items))
-
-
 class TestHalfPrice(unittest.TestCase):
 
     def test_half_price_toys(self):
@@ -71,6 +67,33 @@ class TestHalfPrice(unittest.TestCase):
         discounts = [Discount('50% off', 'toys', half_price)]
         discount = total_discount(discounts, items)
         self.assertAlmostEquals(discount, -0.5)
+
+
+class TestTwoForOne(unittest.TestCase):
+
+    def test_two_for_one_pens(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens'])]
+        discounts = [Discount('2 for 1', 'pens', two_for_one)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -12.0)
+
+    def test_cheapest_pen_is_free(self):
+        items = [Item('lamy', 12.0, 1, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
+        discounts = [Discount('2 for 1', 'pens', two_for_one)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -11.0)
+
+    def test_odd_number_of_items(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens']), Item('parker', 11.0, 1, categories=['pens'])]
+        discounts = [Discount('2 for 1', 'pens', two_for_one)]
+        discount = total_discount(discounts, items)
+        self.assertEquals(discount, -11.0)
+
+    def test_formatting(self):
+        items = [Item('lamy', 12.0, 2, categories=['pens'])]
+        discounts = [Discount('2 for 1', 'pens', two_for_one)]
+        receipt = itemised_discounts(discounts, items)
+        self.assertEquals(receipt, '2 for 1 pens:\t\t\t£-12.00\n')
 
 
 if __name__ == '__main__':

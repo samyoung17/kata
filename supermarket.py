@@ -54,3 +54,21 @@ def format_discount(discount, items):
 
 def itemised_discounts(discounts, items):
     return ''.join(map(lambda discount: format_discount(discount, items), discounts))
+
+
+def half_price(items):
+    return -0.5 * sum(map(lambda item: item.unit_price * item.quantity, items))
+
+
+def split_item(i):
+    return [Item(i.name, i.unit_price, 1, i.unit, i.categories) for j in range(i.quantity)]
+
+
+def split_items(items):
+    return reduce(lambda a, b: a + b, map(split_item, items))
+
+
+def two_for_one(items):
+    ordered_items = sorted(split_items(items), key=lambda i: i.unit_price)
+    half_number_of_items = int(len(ordered_items)/2.0)
+    return -base_price_items(ordered_items[:half_number_of_items])

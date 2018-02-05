@@ -48,5 +48,18 @@ class TestSubtotal(unittest.TestCase):
         self.assertEquals(subtotal, 'Subtotal:\t\t\t£25.60')
 
 
+def half_price(items):
+    return -0.5 * sum(map(lambda item: item.unit_price * item.quantity, items))
+
+
+class TestHalfPrice(unittest.TestCase):
+
+    def test_half_price(self):
+        items = [Item('ball', 1.0, 1, categories=['toys'])]
+        discounts = [Discount('50% off', 'toys', half_price)]
+        subtotal = itemised_discounts(discounts, items)
+        self.assertEquals(subtotal, '50% off toys:\t\t\t£-0.50\n')
+
+
 if __name__ == '__main__':
     unittest.main()
